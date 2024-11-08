@@ -35,13 +35,14 @@ quote-style = 'preserve'
 
 [tool.mypy]
 strict = true
+mypy_path = "./app"
 plugins = [
     "mypy_django_plugin.main",
     "pydantic.mypy"
 ]
 
 [tool.django-stubs]
-django_settings_module = "app.example.settings"
+django_settings_module = "example.settings"
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
