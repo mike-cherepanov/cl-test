@@ -24,6 +24,7 @@ DEBUG = Env.DJANGO_DEBUG
 
 ALLOWED_HOSTS = Env.DJANGO_ALLOWED_HOSTS
 
+AUTH_USER_MODEL = "users.ExampleUser"
 
 # Application definition
 
@@ -34,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'questions',
 ]
 
 MIDDLEWARE = [
