@@ -8,6 +8,15 @@ on:
 jobs:
   CodeQualityChecks:
     runs-on: ubuntu-latest
+    container:
+      image: python:3.12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: example
+          POSTGRES_PASSWORD: example
+          POSTGRES_DB: example
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,9 +30,21 @@ jobs:
         python-version-file: ".python-version"
     - name: Install the project
       run: uv sync --all-extras --dev
+    - name: Copy example env
+      run: cp ./app/example.env ./app/.env
     - name: Run linter check
       run: make lint-check
     - name: Run formatter check
       run: make format-check
     - name: Run MyPy
       run: make mypy-check
+    - name: Tests
+      run: |-
+        make migrate
+        make test
+      env:
+        DB_NAME: example
+        DB_USER: example
+        DB_PASSWORD: example
+        DB_HOST: postgres
+        DB_PORT: 5432
