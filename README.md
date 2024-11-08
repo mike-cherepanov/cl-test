@@ -8,4 +8,17 @@ This project uses Python3.12 and the [uv tool](https://docs.astral.sh/uv/) to ma
 
 ```bash
 uv sync
+source ./.venv/bin/activate
 ```
+
+To ensure code quality, this project uses:
+
+- [ruff](https://docs.astral.sh/ruff/) as linter and formatter
+- [mypy](https://mypy.readthedocs.io/en/stable/) as static type checker
+- [pytest](https://docs.pytest.org/en/stable/) as testing testing framework
+
+To run all checks and automatic fix the following command should be run at the root of the project:
+
+```bash
+make fix
+make check
