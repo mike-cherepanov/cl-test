@@ -40,8 +40,8 @@ jobs:
       run: make mypy-check
     - name: Tests
       run: |-
-        uv run python ./app/manage.py migrate
-        pytest ./app
+        make migrate
+        make test
       env:
         DB_NAME: example
         DB_USER: example

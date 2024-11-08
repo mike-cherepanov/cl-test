@@ -19,3 +19,9 @@ mypy-check:
 
 check: lint-check format-check mypy-check
 fix: format-fix lint-fix
+
+migrate:
+	$(RUN_CMD) python $(APP_ROOT)/manage.py migrate
+
+test:
+	$(RUN_CMD) pytest $(APP_ROOT)
