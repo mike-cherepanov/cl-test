@@ -22,3 +22,25 @@ To run all checks and automatic fix the following command should be run at the r
 ```bash
 make fix
 make check
+```
+
+To setup all environment like DB, Celery and Message Queue install [Docker Desktop](https://www.docker.com/products/docker-desktop) or [OrbStack](https://orbstack.dev)
+and run command at the root of the porject:
+
+```bash
+docker-compose up -d
+```
+
+Apply Django migrations with command:
+
+```bash
+uv run python ./app/manage.py migrate
+```
+
+Run service locally with command
+
+```bash
+uv run python ./app/manage.py runserver
+```
+
+Web app will be available at http://127.0.0.1:8000/
