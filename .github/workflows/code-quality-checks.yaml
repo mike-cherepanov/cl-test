@@ -30,6 +30,8 @@ jobs:
         python-version-file: ".python-version"
     - name: Install the project
       run: uv sync --all-extras --dev
+    - name: Copy example env
+      run: cp ./app/example.env ./app/.env
     - name: Run linter check
       run: make lint-check
     - name: Run formatter check
