@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'questions',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+GUARDIAN_MONKEY_PATCH = False
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
