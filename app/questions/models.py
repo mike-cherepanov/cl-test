@@ -1,6 +1,7 @@
 import logging
 from typing import TypeVar, cast
 
+from django.contrib.auth.models import AnonymousUser
 from django.db import models
 from guardian.models import GroupObjectPermissionBase, UserObjectPermissionBase
 from guardian.shortcuts import get_objects_for_user
@@ -24,8 +25,11 @@ We assyme that Choice permissions is mirrored from Question and should be automa
 
 
 class QuestionManager(models.Manager["Question"]):
-    def with_permission(self, user: ExampleUser, perm_code_name: str) -> models.QuerySet["Question"]:
-        queryset = cast(models.QuerySet[Question], get_objects_for_user(user, perm_code_name, klass=Question))
+    def with_permission(self, user: ExampleUser | AnonymousUser, perm_code_name: str) -> models.QuerySet["Question"]:
+        queryset = cast(
+            models.QuerySet[Question],
+            get_objects_for_user(user, perm_code_name, klass=Question, accept_global_perms=False),
+        )
         return queryset
 
 
@@ -35,8 +39,21 @@ class Question(models.Model):  # type: ignore[django-manager-missing]
     value = models.TextField(max_length=200)
 
 
+class QuestionChoiceManager(models.Manager["Choice"]):
+    def with_question_permission(
+        self, user: ExampleUser | AnonymousUser, perm_code_name: str
+    ) -> models.QuerySet["Choice"]:
+        questions_queryset = cast(
+            models.QuerySet[Question],
+            get_objects_for_user(user, perm_code_name, klass=Question, accept_global_perms=False),
+        )
+        return self.filter(question__in=questions_queryset)
+
+
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.PROTECT, related_name="choices")
+    objects: QuestionChoiceManager = QuestionChoiceManager()
+
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
     value = models.TextField(max_length=200)
 
 
