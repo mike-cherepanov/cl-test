@@ -110,8 +110,11 @@ class ChoicesViewSet(viewsets.ModelViewSet[Choice]):
     def get_queryset(self) -> QuerySet[Choice]:
         if not self.request.user.is_authenticated:
             return Choice.objects.none()
+        question = Question.objects.get(id=self.kwargs['question_pk'])
         match self.action:
             case "list":
-                return Choice.objects.with_question_permission(self.request.user, 'view_question')
+                return Choice.objects.with_question_permission(self.request.user, 'view_question').filter(
+                    question=question
+                )
             case _:
                 return Choice.objects.all()
