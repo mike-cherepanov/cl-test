@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block page %}
+<div class="p-4">
+<h2 class="text-center">{{ page }} questions list</h2>
+
+<ul class="nav nav-tabs ">
+  <li class="nav-item">
+    <a class="nav-link {% if page == 'all' %} active {% endif %}" aria-current="page" href="{% url 'all-question-list' 'all' %}">All</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if page == 'allowed' %} active {% endif %}" href="{% url 'all-question-list' 'allowed' %}">Allowed to View</a>
+  </li>
+</ul>
+
+<div class="accordion" id="accordionExample">
+  {% for question in object_list %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading_{{question.id}}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{question.id}}" aria-expanded="true" aria-controls="collapse_{{question.id}}">
+        {{ question.value }}
+      </button>
+    </h2>
+    <div id="collapse_{{question.id}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          {% for choice in question.choices.all %}
+          <input type="radio" class="btn-check" name="btnradio" id="{{ choice.id }}" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="btnradio1">{{ choice.value }}</label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+{% endblock page %}
