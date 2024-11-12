@@ -25,10 +25,11 @@ make check
 ```
 
 To setup all environment like DB, Celery and Message Queue install [Docker Desktop](https://www.docker.com/products/docker-desktop) or [OrbStack](https://orbstack.dev)
-and run command at the root of the porject:
+and run commands at the root of the porject:
 
 ```bash
+docker-compose build
 docker-compose up -d
 ```
 
-Web app will be available on http://127.0.0.1:8000/
+Web app now will be available on http://127.0.0.1:8000/

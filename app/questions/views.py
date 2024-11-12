@@ -1,7 +1,9 @@
 from logging import getLogger
 from typing import Any
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models.query import QuerySet
+from django.views.generic import ListView
 from guardian.shortcuts import assign_perm
 from rest_framework import permissions, viewsets
 from rest_framework.request import Request
@@ -118,3 +120,24 @@ class ChoicesViewSet(viewsets.ModelViewSet[Choice]):
                 )
             case _:
                 return Choice.objects.all()
+
+
+class QuestionsListView(PermissionRequiredMixin, ListView):  # type: ignore
+    model = Question
+    template_name = 'question_list.html'
+    permission_required = 'questions.view_question'
+
+    def get_queryset(self) -> QuerySet[Question]:
+        queryset = Question.objects.none()
+        if page := self.kwargs.get('page'):
+            if page == 'all':
+                queryset = Question.objects.all()
+            elif page == 'allowed':
+                queryset = Question.objects.with_permission(self.request.user, 'questions.view_question')
+        queryset = queryset.prefetch_related('choices')
+        return queryset
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['page'] = self.kwargs.get('page')
+        return context
