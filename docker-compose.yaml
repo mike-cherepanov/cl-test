@@ -1,5 +1,28 @@
 services:
 
+  app:
+    command: ["uv", "run", "gunicorn", "example.wsgi", "-b", "0.0.0.0:8000"]
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+      target: base
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - db
+
+  app-migrate:
+    command: ["uv", "run", "python", "manage.py", "migrate"]
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+      target: base
+    depends_on:
+      - db
+
   db:
     image: postgres:17
     environment:
@@ -16,3 +39,32 @@ services:
         "-c",
         "log_destination=stderr"
       ]
+
+  celery-beat:
+    command: ["uv", "run", "celery", "-A", "example", "beat", "--loglevel=info"]
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+      target: base
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+      - db
+
+  celery-worker:
+    command: ["uv", "run", "celery", "-A", "example", "worker", "--loglevel=info"]
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+      target: base
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"

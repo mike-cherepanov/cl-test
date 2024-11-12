@@ -31,16 +31,4 @@ and run command at the root of the porject:
 docker-compose up -d
 ```
 
-Apply Django migrations with command:
-
-```bash
-uv run python ./app/manage.py migrate
-```
-
-Run service locally with command
-
-```bash
-uv run python ./app/manage.py runserver
-```
-
-Web app will be available at http://127.0.0.1:8000/
+Web app will be available on http://127.0.0.1:8000/
